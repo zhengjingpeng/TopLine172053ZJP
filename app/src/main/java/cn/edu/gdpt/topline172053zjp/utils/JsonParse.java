@@ -19,8 +19,8 @@ public class JsonParse {
         }
         return instance;
     }
-    public List<NewsBean> getAdList(String json){
         Gson gson=new Gson();
+        public List<NewsBean> getAdList(String json){
         Type listType=new TypeToken<List<NewsBean>>(){}.getType();
         List<NewsBean> alList =gson.fromJson(json,listType);
         return alList;
