@@ -1,6 +1,7 @@
 package cn.edu.gdpt.topline172053zjp.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 
 import cn.edu.gdpt.topline172053zjp.R;
+import cn.edu.gdpt.topline172053zjp.activity.PythonActivity;
 import cn.edu.gdpt.topline172053zjp.adapter.AdBannerAdapter;
 import cn.edu.gdpt.topline172053zjp.adapter.HomeListAdapter;
 import cn.edu.gdpt.topline172053zjp.bean.NewsBean;
@@ -47,6 +50,7 @@ public class HomeFragment extends Fragment {
     private HomeListAdapter adapter;
     private View adBannerLay;
     private ViewPager adPager;
+    private LinearLayout ll_python;
     private AdBannerAdapter ada;
     public HomeFragment() {
         // Required empty public constructor
@@ -59,12 +63,25 @@ public class HomeFragment extends Fragment {
         okHttpClient = new OkHttpClient();
         mHandle = new MHandle();
         getADData();
+        getNewsData();
        /* getData();*/
         view =inflater.inflate(R.layout.fragment_home, container, false);
         mPullToRefreshView=view.findViewById(R.id.pull_to_refresh);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullToRefreshView.setRefreshing(false);
+                        getADData();
+                    }
+                },1000);
+            }
+        });
         recyclerView=view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter=new HomeListAdapter();
+        adapter=new HomeListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         View headView=inflater.inflate(R.layout.head_view,container,false);
         recyclerView.addHeaderView(headView);
@@ -73,6 +90,14 @@ public class HomeFragment extends Fragment {
         ada=new AdBannerAdapter(getActivity().getSupportFragmentManager());
         adPager.setAdapter(ada);
         resetSize();
+        ll_python = (LinearLayout) headView.findViewById(R.id.ll_python);
+        ll_python.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), PythonActivity.class);
+                startActivity(intent);
+            }
+        });
         return  view;
     }
 
@@ -154,6 +179,25 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    private void getNewsData() {
+        Request request = new Request.Builder().url(Constant.WEB_SITE +
+                Constant.REQUEST_NEWS_URL).build();
+        Call call = okHttpClient.newCall(request);
+        //开启异步线程访问网络
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String res = response.body().string();
+                Message msg = new Message();
+                msg.what = 2;
+                msg.obj = res;
+                mHandle.sendMessage(msg);
+            }
+            @Override
+            public void onFailure(Request arg0, IOException arg1) {
+            }
+        });
+    }
 
     class MHandle extends Handler {
         @Override
@@ -171,6 +215,20 @@ public class HomeFragment extends Fragment {
                         }
                     }
                         break;
+                case 2:
+                    if (msg.obj != null) {
+                        String adResult = (String) msg.obj;
+                        List<NewsBean> adl = JsonParse.getInstance().
+                                getAdList(adResult);
+                        if (adl != null) {
+                            if (adl.size() > 0) {
+                                adapter.setData(adl);
+                            }
+                        }
+                    }
+                    break;
+
+
 
             }
         }

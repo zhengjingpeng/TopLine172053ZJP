@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".fragment.HomeFragment">
-    <include layout="@layout/main_title_bar" />
+    <!--<include layout="@layout/main_title_bar" />-->
     <com.itheima.PullToRefreshView
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
