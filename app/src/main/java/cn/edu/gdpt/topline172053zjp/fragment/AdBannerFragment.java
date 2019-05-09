@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 
 
 import cn.edu.gdpt.topline172053zjp.R;
+import cn.edu.gdpt.topline172053zjp.activity.NewsDetailActivity;
 import cn.edu.gdpt.topline172053zjp.bean.NewsBean;
 
 public class AdBannerFragment extends Fragment {
@@ -53,7 +54,7 @@ public class AdBannerFragment extends Fragment {
                 ViewGroup.LayoutParams.FILL_PARENT);
         iv.setLayoutParams(lp);                           //设置图片宽高参数
         iv.setScaleType(ImageView.ScaleType.FIT_XY); //把图片填满整个控件
-      /*  iv.setOnClickListener(new View.OnClickListener() {
+        iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (nb == null) return;
@@ -61,7 +62,7 @@ public class AdBannerFragment extends Fragment {
                 intent.putExtra("newsBean", nb);
                 getActivity().startActivity(intent);
             }
-        });*/
+        });
         return iv;
     }
 }
