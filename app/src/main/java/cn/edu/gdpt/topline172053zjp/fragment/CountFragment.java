@@ -17,6 +17,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import cn.edu.gdpt.topline172053zjp.R;
 import cn.edu.gdpt.topline172053zjp.activity.AndroidCountActivity;
+import cn.edu.gdpt.topline172053zjp.activity.JavaCountActivity;
 import cn.edu.gdpt.topline172053zjp.utils.BuilderManager;
 
 /**
@@ -60,10 +61,10 @@ public class CountFragment extends Fragment {
                                 Intent android = new Intent(getActivity(), AndroidCountActivity.class);
                                 startActivity(android);
                                 break;
-                           /* case 1:   //跳转到Java统计详情界面
+                            case 1:   //跳转到Java统计详情界面
                                 Intent java = new Intent(getActivity(), JavaCountActivity.class);
                                 startActivity(java);
-                                break;*/
+                                break;
                         }
                     }
                 }));
